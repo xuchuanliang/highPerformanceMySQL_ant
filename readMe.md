@@ -46,7 +46,14 @@ SERIALIZABLE（可串行化）：它通过强制事务串行执行，避免的�
 - 在文件系统下，MySQL将每个数据库（也可以称为schema）保存为数据目录下一个子目录，创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件保存表的定义。
 可以使用SHOW TABLE STATUS LIKE '表名';查看表的相关信息。包含：Name/Engine/Version/Row_format/Rows/Avg_row_length/Data_length/Max_data_length/Index_length/Data_free/Auto_increment/Create_time/Update_time/Check_time/Collation/Checksum/Create_options/Comment
 2019年1月24日 22:16:38  53/801
+#### 1.5.1 InnoDB存储引擎
+>InnoDB采用MVCC来支持高并发，并且实现四个标准的隔离级别。其默认级别是REPEATABLE READ（可重复读），并且通过间隙锁策略防止幻读的出现。间隙锁使的InnoDB不仅仅锁定查询涉及的行，
+还会对索引中的间隙进行锁定，以防止幻影行的插入。InnoDB表是基于聚簇索引建立的，聚簇索引对主键查询有很高的性能。不过他的二级索引（非主键索引）中必须包含主键列，所以如果主键列很大
+的话，其他的索引都会很大。InnoDB内部做了很多优化，包括从磁盘读取数据时采用的可预测性预读，能够自动在内存中创建hash索引以加速读操作的自适应哈希索引，以及能够加速插入操作
+的插入缓冲区等。
 
+- 修改表的存储引擎：1.ALTER TABLE 表名 ENGINE = InnoDB;2.使用mysqldump导出--》修改sql语句--》导入；3.创建与查询：创建一个新的相同格式的表，使用要求的存储引擎，然后通过INSERT INTO 表名 select * from 表名
+2019年1月30日 16:02:23 72/801
 
 
 
